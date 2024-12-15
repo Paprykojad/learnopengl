@@ -1,6 +1,6 @@
 #include <iostream>
-#include "./dependencies/headers/glad.h"
-#include "./dependencies/headers/glfw3.h"
+#include "../dependencies/headers/glad.h"
+#include "../dependencies/headers/glfw3.h"
 // #include <glad.h>
 // #include <glfw3.h>
 
