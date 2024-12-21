@@ -137,6 +137,7 @@ int main() {
         0.5f, -0.5f, 0.0f,
         -0.5f, -0.5f, 0.0f,
         -0.5f, 0.5f, 0.0f,
+
         0.0f, 0.5f, 0.0f,
     };
     //float color[] = {
@@ -146,7 +147,7 @@ int main() {
     unsigned int indicies[] = {
         //0, 1, 3,
         //1, 2, 3,
-        1, 2, 4,
+        4, 1, 2
     };
     unsigned int VBO; // vertex buffer object
     //unsigned int VBO_color; // vertex buffer object
