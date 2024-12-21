@@ -136,6 +136,8 @@ int main() {
         0.5f, 0.5f, 0.0f,
         0.5f, -0.5f, 0.0f,
         -0.5f, 0.5f, 0.0f,
+    };
+    float verticies2[] = {
         0.5f, -0.5f, 0.0f,
         -0.5f, -0.5f, 0.0f,
         -0.5f, 0.5f, 0.0f,
@@ -144,9 +146,12 @@ int main() {
         0, 1, 3,
         1, 2, 3,
     };
+
+
     unsigned int VBO; // verted buffer object
     unsigned int VAO; // vertex array object
     unsigned int EBO; // element buffer object
+
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &EBO);
@@ -166,6 +171,27 @@ int main() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+
+    unsigned int VBO2; // verted buffer object
+    unsigned int VAO2; // vertex array object
+    unsigned int EBO2; // element buffer object
+    glGenBuffers(1, &VBO2);
+    glGenVertexArrays(1, &VAO2);
+    glGenBuffers(1, &EBO2);
+
+    glBindVertexArray(VAO2);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO2);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticies2), verticies2, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO2);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+
+
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -178,7 +204,12 @@ int main() {
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glBindVertexArray(0);
+
+        glBindVertexArray(VAO2);
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
 
         glfwSwapBuffers(window);
