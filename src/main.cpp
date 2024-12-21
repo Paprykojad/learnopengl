@@ -137,32 +137,32 @@ int main() {
         0.5f, -0.5f, 0.0f,
         -0.5f, -0.5f, 0.0f,
         -0.5f, 0.5f, 0.0f,
+        0.0f, 0.5f, 0.0f,
     };
-    float color[] = {
-        1.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 0.0f, 1.0f,
-    };
+    //float color[] = {
+        //1.0f, 0.0f, 0.0f, 1.0f,
+        //1.0f, 0.0f, 0.0f, 1.0f,
+    //};
     unsigned int indicies[] = {
-        0, 1, 3,
-        1, 2, 3,
+        //0, 1, 3,
+        //1, 2, 3,
+        1, 2, 4,
     };
-    unsigned int VBO; // verted buffer object
-    unsigned int VBO_color; // verted buffer object
+    unsigned int VBO; // vertex buffer object
+    //unsigned int VBO_color; // vertex buffer object
     unsigned int VAO; // vertex array object
     unsigned int EBO; // element buffer object
     glGenBuffers(1, &VBO);
-    glGenBuffers(1, &VBO_color);
+    //glGenBuffers(1, &VBO_color);
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_color);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(color), color, GL_STREAM_DRAW);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_TRUE, sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
+    //glBindBuffer(GL_ARRAY_BUFFER, VBO_color);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(color), color, GL_STREAM_DRAW);
+    //glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(verticies), verticies, GL_STATIC_DRAW);
@@ -182,34 +182,14 @@ int main() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    float dir[] = {
-        -1.0f, -1.0f, -1.0f, -1.0f,
-    };
     while(!glfwWindowShouldClose(window)) {
         processInput(window);
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glBindBuffer(GL_ARRAY_BUFFER, VBO_color);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(color), color, GL_STREAM_DRAW);
-        cout << endl;
-        for (int j =0; j < 4; j += 1) {
-
-        }
-        for (int i =0; i < 4; i += 1) {
-            color[i] += 0.01f*dir[i]*i;
-
-            if (color[i] >= 5.0f)
-                dir[i] = -1.0f;
-            if (color[i] <= -5.0f)
-                dir[i] = 1.0f;
-            cout << "Color[" << i << "] = " << color[i] << endl;
-        }
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 
         glfwSwapBuffers(window);
