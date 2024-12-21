@@ -4,7 +4,6 @@
 #include <iterator>
 #include <fstream>
 #include <ostream>
-#include <stdexcept>
 #include "../dependencies/headers/glad.h"
 #include "../dependencies/headers/glfw3.h"
 
@@ -141,7 +140,7 @@ int main() {
     };
     unsigned int indicies[] = {
         0, 1, 3,
-        1, 2, 3
+        1, 2, 3,
     };
     unsigned int VBO; // verted buffer object
     unsigned int VAO; // vertex array object
@@ -168,10 +167,10 @@ int main() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     while(!glfwWindowShouldClose(window)) {
         processInput(window);
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
