@@ -186,14 +186,19 @@ int main() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO2);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
 
+    //kompilacja shaderu
+    unsigned int vertexShader2 = compileVertexShader("../src/shaders/shader2.vert");
+    unsigned int fragmentShader2 = compileFragmentShader("../src/shaders/shader2.frag");
+    unsigned int shaderProgram2 = createShaderProgram(vertexShader2, fragmentShader2);
+
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
 
 
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     while(!glfwWindowShouldClose(window)) {
@@ -207,6 +212,7 @@ int main() {
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
 
+        glUseProgram(shaderProgram2);
         glBindVertexArray(VAO2);
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glDrawArrays(GL_TRIANGLES, 0, 3);
