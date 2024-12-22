@@ -47,9 +47,9 @@ int main() {
 
     //tworzenie danych
     float verticies[] = {
-        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
     };
     unsigned int indicies[] = {
         0, 1, 2,
@@ -78,6 +78,8 @@ int main() {
     //kompilacja shaderu
     shader myShader("../src/shaders/shader.vert", "../src/shaders/shader.frag");
 
+    float horizontalOffset = 0.5f;
+
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -88,7 +90,9 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         //glUseProgram(shaderProgram);
+        int horizontalOffsetIndex = glGetUniformLocation(myShader.ID, "horizontalOffset");
         myShader.use();
+        glUniform1f(horizontalOffsetIndex, horizontalOffset);
 
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
