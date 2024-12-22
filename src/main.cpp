@@ -3,7 +3,7 @@
 #include <glad.h>
 //#include "../dependencies/headers/glfw3.h"
 #include <glfw3.h>
-#include "Shader.h"
+#include "shader.h"
 
 using namespace std;
 
@@ -29,16 +29,14 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "LearnOpenGL", NULL, NULL);
-    if (window == NULL)
-    {
+    if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
     glfwMakeContextCurrent(window);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
@@ -49,9 +47,9 @@ int main() {
 
     //tworzenie danych
     float verticies[] = {
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
     };
     unsigned int indicies[] = {
         0, 1, 2,
@@ -78,7 +76,7 @@ int main() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
 
     //kompilacja shaderu
-    Shader myShader("../src/shaders/shader.vert", "../src/shaders/shader.frag");
+    shader myShader("../src/shaders/shader.vert", "../src/shaders/shader.frag");
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

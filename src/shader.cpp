@@ -1,20 +1,20 @@
-#include "Shader.h"
+#include "shader.h"
 
-std::string Shader::loadFile(std::string path) {
+std::string shader::loadFile(std::string path) {
     std::string dest;
     try {
         std::ifstream file(path);
         if (!file)
             dest = nullptr;
         dest = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>()); // Read file content
-    } catch (const std::exception e) {
+    } catch (std::exception e) {
         throw e;
     }
     //cout << "read: '" << dest << "'" << endl;
     return dest;
 }
 
-int Shader::compileFragmentShader(std::string path) {
+int shader::compileFragmentShader(std::string path) {
     unsigned int fragmentShader;
     std::string src = loadFile(path).c_str();
     const char *fragmentShaderSource = src.c_str();
@@ -36,7 +36,7 @@ int Shader::compileFragmentShader(std::string path) {
     return fragmentShader;
 }
 
-int Shader::compileVertexShader(std::string path) {
+int shader::compileVertexShader(std::string path) {
     unsigned int vertexShader;
     std::string src = loadFile(path).c_str();
     const char *vertexShaderSource = src.c_str();
@@ -58,7 +58,7 @@ int Shader::compileVertexShader(std::string path) {
     return vertexShader;
 }
 
-int Shader::createShaderProgram(int vertexShader, int fragmentShader) {
+int shader::createShaderProgram(int vertexShader, int fragmentShader) {
     int success;
     char infoLog[512];
 
@@ -80,24 +80,24 @@ int Shader::createShaderProgram(int vertexShader, int fragmentShader) {
     return shaderProgram;
 }
 
-Shader::Shader(std::string vertexPath, std::string fragmentPath) {
+shader::shader(std::string vertexPath, std::string fragmentPath) {
     unsigned int vertexShader = compileVertexShader(vertexPath);
     unsigned int fragmentShader = compileFragmentShader(fragmentPath);
     ID = createShaderProgram(vertexShader, fragmentShader);
 }
 
-void Shader::use() {
+void shader::use() {
     glUseProgram(ID);
 }
 
-void Shader::setBool(const std::string &name, bool value) const {
+void shader::setBool(const std::string &name, bool value) const {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), (int) value);
 }
 
-void Shader::setInt(const std::string &name, int value) const {
+void shader::setInt(const std::string &name, int value) const {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-void Shader::setFloat(const std::string &name, float value) const {
+void shader::setFloat(const std::string &name, float value) const {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }

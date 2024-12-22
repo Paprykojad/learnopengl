@@ -10,7 +10,7 @@
 #include <glad.h>
 #include <iostream>
 
-class Shader {
+class shader {
 private:
     std::string loadFile(std::string path);
     int compileVertexShader(std::string path);
@@ -22,7 +22,7 @@ public:
     unsigned int ID;
 
     // constructor reads and builds the shader
-    Shader(std::string vertexPath, std::string fragmentPath);
+    shader(std::string vertexPath, std::string fragmentPath);
 
     // use/activate the shader
     void use();
