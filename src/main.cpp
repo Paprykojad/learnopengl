@@ -1,11 +1,9 @@
-#include <cmath>
-#include <exception>
 #include <iostream>
-#include <iterator>
-#include <fstream>
-#include <ostream>
-#include "../dependencies/headers/glad.h"
-#include "../dependencies/headers/glfw3.h"
+//#include "../dependencies/headers/glad.h"
+#include <glad.h>
+//#include "../dependencies/headers/glfw3.h"
+#include <glfw3.h>
+#include "Shader.h"
 
 using namespace std;
 
@@ -20,88 +18,6 @@ void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
-}
-
-
-string loadFile(string path) {
-    string dest;
-    try {
-        ifstream file(path);
-        if (!file)
-            dest = nullptr;
-        dest = string((istreambuf_iterator<char>(file)), istreambuf_iterator<char>()); // Read file content
-    } catch (const exception e) {
-        throw e;
-    }
-    //cout << "read: '" << dest << "'" << endl;
-    return dest;
-}
-
-int compileVertexShader(string path) {
-    unsigned int vertexShader;
-    string src = loadFile(path).c_str();
-    const char *vertexShaderSource = src.c_str();
-    //cout << "\"" <<  *vertexShaderSource << "\"" <<  endl;
-
-    int  success;
-    char infoLog[512];
-
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-        throw "ERROR::SHADER::VERTEX::COMPILATION_FAILED";
-    }
-    return vertexShader;
-}
-
-int compileFragmentShader(string path) {
-    unsigned int fragmentShader;
-    string src = loadFile(path).c_str();
-    const char *fragmentShaderSource = src.c_str();
-    //cout << "\"" << *fragmentShaderSource << "\"" <<  endl;
-
-    int  success;
-    char infoLog[512];
-
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-        throw "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED";
-    }
-    return fragmentShader;
-}
-
-int createShaderProgram(int vertexShader, int fragmentShader) {
-
-    int  success;
-    char infoLog[512];
-
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if(!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-        throw "ERROR::SHADER::PROGRAM::LINKING_FAILED";
-    }
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
-    return shaderProgram;
 }
 
 int main() {
@@ -137,10 +53,6 @@ int main() {
         -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
         0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
     };
-    //float color[] = {
-        //1.0f, 0.0f, 0.0f, 1.0f,
-        //1.0f, 0.0f, 0.0f, 1.0f,
-    //};
     unsigned int indicies[] = {
         0, 1, 2,
     };
@@ -155,11 +67,6 @@ int main() {
 
     glBindVertexArray(VAO);
 
-    //glBindBuffer(GL_ARRAY_BUFFER, VBO_color);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(color), color, GL_STREAM_DRAW);
-    //glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
-    //glEnableVertexAttribArray(1);
-
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(verticies), verticies, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
@@ -171,10 +78,7 @@ int main() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
 
     //kompilacja shaderu
-    unsigned int vertexShader = compileVertexShader("../src/shaders/shader.vert");
-    unsigned int fragmentShader = compileFragmentShader("../src/shaders/shader.frag");
-    unsigned int shaderProgram = createShaderProgram(vertexShader, fragmentShader);
-
+    Shader myShader("../src/shaders/shader.vert", "../src/shaders/shader.frag");
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -185,7 +89,8 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
+        //glUseProgram(shaderProgram);
+        myShader.use();
 
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);

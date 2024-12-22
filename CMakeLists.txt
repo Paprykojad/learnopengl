@@ -4,7 +4,9 @@ project(learnopengl)
 set(CMAKE_CXX_STANDARD 20)
 set(BUILD_SHARED_LIBS OFF)
 
-add_executable(learnopengl ${CMAKE_SOURCE_DIR}/src/main.cpp)
+add_executable(learnopengl ${CMAKE_SOURCE_DIR}/src/main.cpp
+        src/Shader.cpp
+        src/Shader.h)
 target_link_directories(learnopengl PRIVATE ${CMAKE_SOURCE_DIR}/dependencies/libraries)
 target_include_directories(learnopengl PRIVATE ${CMAKE_SOURCE_DIR}/dependencies/headers)
 
