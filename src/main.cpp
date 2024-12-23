@@ -4,6 +4,7 @@
 //#include "../dependencies/headers/glfw3.h"
 #include <glfw3.h>
 #include "Shader.h"
+#include <stb_image.h>
 
 using namespace std;
 

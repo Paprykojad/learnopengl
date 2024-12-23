@@ -3,10 +3,13 @@ project(learnopengl)
 
 set(CMAKE_CXX_STANDARD 20)
 set(BUILD_SHARED_LIBS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(learnopengl ${CMAKE_SOURCE_DIR}/src/main.cpp
         src/Shader.cpp
-        src/Shader.h)
+        src/Shader.h
+        dependencies/headers/stb_image.h
+        dependencies/src/stb_image.cpp)
 target_link_directories(learnopengl PRIVATE ${CMAKE_SOURCE_DIR}/dependencies/libraries)
 target_include_directories(learnopengl PRIVATE ${CMAKE_SOURCE_DIR}/dependencies/headers)
 
