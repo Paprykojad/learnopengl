@@ -1,5 +1,5 @@
 .cache
-build
 .idea
+build
 cmake-build-debug
 cmake-build-release
