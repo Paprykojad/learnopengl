@@ -7,7 +7,8 @@
 
 #include <string>
 #include <fstream>
-#include <glad.h>
+//#include <glad.h>
+#include "../dependencies/headers/glad.h"
 #include <iostream>
 
 class Shader {
