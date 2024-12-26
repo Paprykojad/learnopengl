@@ -4,12 +4,13 @@
 // #include "../dependencies/headers/glfw3.h"
 #include <glfw3.h>
 #include "Shader.h"
-#include "glm/ext/matrix_transform.hpp"
-#include "glm/ext/vector_float3.hpp"
 #include <stb_image.h>
 #include <glm/glm.hpp>
+// #include "glm/glm.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+// #include "glm/ext/matrix_transform.hpp"
 #include <glm/gtc/type_ptr.hpp>
+// #include "glm/ext/type_ptr.hpp"
 
 using namespace std;
 
@@ -156,7 +157,8 @@ int main() {
     unsigned int transformLoc = glGetUniformLocation(myShader.ID, "transform");
     glm::mat4 trans = glm::mat4(1.0f);
     trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    // trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+    trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+    trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     while(!glfwWindowShouldClose(window)) {
@@ -166,7 +168,6 @@ int main() {
 
 
         myShader.use();
-        // trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
         trans = glm::rotate(trans, glm::radians(1.0f), glm::vec3(0.0, 0.0, 1.0));
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
         glActiveTexture(GL_TEXTURE0);
