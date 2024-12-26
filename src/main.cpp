@@ -1,10 +1,15 @@
 #include <iostream>
-#include "../dependencies/headers/glad.h"
-//#include <glad.h>
-#include "../dependencies/headers/glfw3.h"
-// //#include <glfw3.h>
- #include "Shader.h"
+// #include "../dependencies/headers/glad.h"
+#include <glad.h>
+// #include "../dependencies/headers/glfw3.h"
+#include <glfw3.h>
+#include "Shader.h"
+#include "glm/ext/matrix_transform.hpp"
+#include "glm/ext/vector_float3.hpp"
 #include <stb_image.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
 
@@ -22,6 +27,8 @@ void processInput(GLFWwindow *window) {
 }
 
 int main() {
+    // glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+    // glm::mat4 trans = glm::mat4(1.0f);
     std::cout << "Hello, World!" << std::endl;
 
     glfwInit();
@@ -30,16 +37,14 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "LearnOpenGL", NULL, NULL);
-    if (window == NULL)
-    {
+    if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
     glfwMakeContextCurrent(window);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
@@ -59,11 +64,6 @@ int main() {
     unsigned int indicies[] = {
         0, 1, 2,
         0, 2, 3,
-    };
-    float texCoords[] = {
-        0.0f, 0.0f, // lower-left corner
-        1.0f, 0.0f, // lower-right corner
-        0.5f, 1.0f // top-center corner
     };
     unsigned int VBO; // vertex buffer object
     //unsigned int VBO_color; // vertex buffer object
@@ -140,8 +140,7 @@ int main() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     data = stbi_load("../src/textures/awesomeface.png", &width, &height, &nrChannels, 0);
-    if (data)
-    {
+    if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {
@@ -153,6 +152,12 @@ int main() {
     glUniform1i(glGetUniformLocation(myShader.ID, "texture1"), 0); // set it manually
     myShader.setInt("texture2", 1); // or with shader class
 
+    // obracanie kradratu
+    // unsigned int transformLoc = glGetUniformLocation(myShader.ID, "transform");
+    glm::mat4 trans = glm::mat4(1.0f);
+    trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     while(!glfwWindowShouldClose(window)) {
         processInput(window);
@@ -161,6 +166,7 @@ int main() {
 
 
         myShader.use();
+        myShader.setInt("transform", glGetUniformLocation(myShader.ID, "transform"));
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
         glActiveTexture(GL_TEXTURE1);
