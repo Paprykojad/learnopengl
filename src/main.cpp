@@ -153,10 +153,10 @@ int main() {
     myShader.setInt("texture2", 1); // or with shader class
 
     // obracanie kradratu
-    // unsigned int transformLoc = glGetUniformLocation(myShader.ID, "transform");
+    unsigned int transformLoc = glGetUniformLocation(myShader.ID, "transform");
     glm::mat4 trans = glm::mat4(1.0f);
     trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+    // trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     while(!glfwWindowShouldClose(window)) {
@@ -166,7 +166,9 @@ int main() {
 
 
         myShader.use();
-        myShader.setInt("transform", glGetUniformLocation(myShader.ID, "transform"));
+        // trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+        trans = glm::rotate(trans, glm::radians(1.0f), glm::vec3(0.0, 0.0, 1.0));
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
         glActiveTexture(GL_TEXTURE1);
