@@ -1,16 +1,11 @@
 #include <iostream>
-// #include "../dependencies/headers/glad.h"
 #include <glad.h>
-// #include "../dependencies/headers/glfw3.h"
 #include <glfw3.h>
 #include "Shader.h"
 #include <stb_image.h>
 #include <glm/glm.hpp>
-// #include "glm/glm.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-// #include "glm/ext/matrix_transform.hpp"
 #include <glm/gtc/type_ptr.hpp>
-// #include "glm/ext/type_ptr.hpp"
 
 using namespace std;
 
@@ -27,9 +22,22 @@ void processInput(GLFWwindow *window) {
     }
 }
 
+class Time {
+private:
+    double time;
+public:
+    Time() {
+        time = glfwGetTime();
+    }
+
+    double deltaTime() {
+        double t = time;
+        time = glfwGetTime();
+        return time - t;
+    }
+};
+
 int main() {
-    // glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
-    // glm::mat4 trans = glm::mat4(1.0f);
     std::cout << "Hello, World!" << std::endl;
 
     glfwInit();
@@ -52,7 +60,6 @@ int main() {
 
     glViewport(0, 0, windowWidth, windowHeight);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
 
     //tworzenie danych
     float verticies[] = {
@@ -155,10 +162,11 @@ int main() {
 
     // obracanie kradratu
     unsigned int transformLoc = glGetUniformLocation(myShader.ID, "transform");
-    glm::mat4 trans = glm::mat4(1.0f);
-    trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-    trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)windowWidth/(float)windowHeight, 0.1f, 100.0f);
+    glm::mat4 view = glm::mat4(1.0f);
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     while(!glfwWindowShouldClose(window)) {
@@ -166,10 +174,14 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-
         myShader.use();
-        trans = glm::rotate(trans, glm::radians(1.0f), glm::vec3(0.0, 0.0, 1.0));
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+        int projectionLoc = glGetUniformLocation(myShader.ID, "projection");
+        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        int viewLoc = glGetUniformLocation(myShader.ID, "view");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        int modelLoc = glGetUniformLocation(myShader.ID, "model");
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
         glActiveTexture(GL_TEXTURE1);
