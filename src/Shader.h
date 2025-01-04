@@ -2,9 +2,11 @@
 // Created by fg on 12/22/24.
 //
 
-#ifndef SHADER_H
-#define SHADER_H
+// #ifndef SHADER_H
+// #define SHADER_H
+#pragma once
 
+#include <algorithm>
 #include <string>
 #include <fstream>
 //#include <glad.h>
@@ -38,4 +40,4 @@ public:
 
 
 
-#endif //SHADER_H
+// #endif //SHADER_H

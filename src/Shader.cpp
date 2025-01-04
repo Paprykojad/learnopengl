@@ -1,16 +1,24 @@
 #include "Shader.h"
+#include <iostream>
+#include <filesystem>
+using namespace std;
 
 std::string Shader::loadFile(std::string path) {
     std::string dest;
+    // const char* dest;
     try {
         std::ifstream file(path);
-        if (!file)
-            dest = nullptr;
+        if (!file) {
+            // dest = nullptr;
+            dest = "";
+            return dest;
+        }
+        // dest = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>()); // Read file content
         dest = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>()); // Read file content
     } catch (const std::exception e) {
         throw e;
     }
-    //cout << "read: '" << dest << "'" << endl;
+    // cout << "read: '" << dest << "'" << endl;
     return dest;
 }
 
@@ -40,7 +48,6 @@ int Shader::compileVertexShader(std::string path) {
     unsigned int vertexShader;
     std::string src = loadFile(path).c_str();
     const char *vertexShaderSource = src.c_str();
-    //cout << "\"" <<  *vertexShaderSource << "\"" <<  endl;
 
     int  success;
     char infoLog[512];

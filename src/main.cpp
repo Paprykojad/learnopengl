@@ -3,16 +3,16 @@
 #include <glfw3.h>
 #include "Shader.h"
 #include <stb_image.h>
-#include <thread>
+// #include <thread>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-using namespace std;
+// using namespace std;
 
-const uint windowWidth = 800;
-const uint windowHeight = 600;
-const uint framerate = 1;
+const unsigned int windowWidth = 800;
+const unsigned int windowHeight = 600;
+const unsigned int framerate = 1;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -64,6 +64,7 @@ int main() {
     glViewport(0, 0, windowWidth, windowHeight);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+
     //tworzenie danych
 
     float verticies[] = {
@@ -109,6 +110,7 @@ int main() {
         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
+
     unsigned int indicies[] = {
         0, 1, 2,
         0, 2, 3,
@@ -136,6 +138,7 @@ int main() {
 
     //kompilacja shaderu
     Shader myShader("../src/shaders/shader.vert", "../src/shaders/shader.frag");
+    // Shader myShader("src/shaders/shader.vert", "src/shaders/shader.frag");
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -158,6 +161,7 @@ int main() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+
     int width, height, nrChannels;
     unsigned char *data = stbi_load("../src/textures/wall.jpg", &width, &height, &nrChannels, 0);
 
@@ -165,7 +169,7 @@ int main() {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {
-        cout << "Failed to load texture" << endl;
+       std::cout << "Failed to load texture" <<std::endl;
     }
     stbi_image_free(data);
 
@@ -190,9 +194,10 @@ int main() {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {
-        cout << "Failed to load texture" << endl;
+       std::cout << "Failed to load texture" <<std::endl;
     }
     stbi_image_free(data);
+
 
     myShader.use();
     glUniform1i(glGetUniformLocation(myShader.ID, "texture1"), 0); // set it manually
@@ -220,6 +225,7 @@ int main() {
         glm::vec3(-1.3f, 1.0f, -1.5f)
     };
 
+
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glEnable(GL_DEPTH_TEST);
 
@@ -238,10 +244,9 @@ int main() {
                        glm::vec3(0.0f, 1.0f, 0.0f));
 
 
-
     class Time time;
     while(!glfwWindowShouldClose(window)) {
-        processInput(window);
+        // processInput(window);
 
         // const float radius = 10.0f;
         // float camX = sin(glfwGetTime()) * radius;
@@ -249,14 +254,15 @@ int main() {
         // view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
         view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
         const float cameraSpeed = 0.05f; // adjust accordingly
+        float finalSpeed = cameraSpeed * (float)time.deltaTime() * 100.0f;
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            cameraPos += cameraSpeed * cameraFront;
+            cameraPos += finalSpeed * cameraFront;
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            cameraPos -= cameraSpeed * cameraFront;
+            cameraPos -= finalSpeed * cameraFront;
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+            cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * finalSpeed;
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+            cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * finalSpeed;
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -266,7 +272,6 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, texture2);
 
         myShader.use();
-        // model = glm::rotate(model, (0.0001f/(float)time.deltaTime()) * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
         unsigned int modelLoc = glGetUniformLocation(myShader.ID, "model");
         unsigned int viewLoc = glGetUniformLocation(myShader.ID, "view");
         unsigned int projectionLoc = glGetUniformLocation(myShader.ID, "projection");
@@ -293,11 +298,9 @@ int main() {
 
         glfwSwapBuffers(window);
         glfwPollEvents();
-
-        double dt = time.deltaTime();
     }
 
     glfwTerminate();
-    cout << "Terminating program" << endl;
+   std::cout << "Terminating program" <<std::endl;
     return 0;
 }
